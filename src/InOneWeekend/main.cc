@@ -104,13 +104,13 @@ int main() {
 
     /*--- CONFIGURAÇÃO DA CÂMERA 2 ---
     cam.vfov     = 55.0;
-    cam.lookfrom = point3(-8, 4, 0); // Posição 90 graus à ESQUERDA
+    cam.lookfrom = point3(-8, 4, 0); // Posição 90 graus à esquerda
     cam.lookat   = point3(0, 1, 0);
     cam.vup      = vec3(0, 1, 0); */ 
 
     /* --- CONFIGURAÇÃO DA CÂMERA 3 ---
     cam.vfov     = 55.0;
-    cam.lookfrom = point3(8, 4, 0); // Posição 90 graus à DIREITA
+    cam.lookfrom = point3(8, 4, 0); // Posição 90 graus à direita
     cam.lookat   = point3(0, 1, 0);
     cam.vup      = vec3(0, 1, 0);
     */

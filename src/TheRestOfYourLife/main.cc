@@ -1,72 +1,121 @@
-//==============================================================================================
-// Originally written in 2016 by Peter Shirley <ptrshrl@gmail.com>
-//
-// To the extent possible under law, the author(s) have dedicated all copyright and related and
-// neighboring rights to this software to the public domain worldwide. This software is
-// distributed without any warranty.
-//
-// You should have received a copy (see file COPYING.txt) of the CC0 Public Domain Dedication
-// along with this software. If not, see <http://creativecommons.org/publicdomain/zero/1.0/>.
-//==============================================================================================
-
 #include "rtweekend.h"
 
+#include "bvh.h"
 #include "camera.h"
+#include "constant_medium.h"
 #include "hittable_list.h"
 #include "material.h"
 #include "quad.h"
 #include "sphere.h"
-
+#include "texture.h"
 
 int main() {
     hittable_list world;
+    auto lights = make_shared<hittable_list>();
 
-    auto red   = make_shared<lambertian>(color(.65, .05, .05));
-    auto white = make_shared<lambertian>(color(.73, .73, .73));
-    auto green = make_shared<lambertian>(color(.12, .45, .15));
+    // --- TEXTURAS ---
+    auto ground_texture = make_shared<image_texture>("external/minecraft.jpg");
+    auto dirt_texture = make_shared<image_texture>("external/bloco_solo_minecraft.jpg");
+
+    // --- MATERIAIS ---
+    auto ground_material = make_shared<lambertian>(ground_texture);
+    auto dirt_material = make_shared<lambertian>(dirt_texture);
+    
+    auto red_material   = make_shared<lambertian>(color(.65, .05, .05));
+    auto white_material = make_shared<lambertian>(color(.73, .73, .73));
+    auto green_material = make_shared<lambertian>(color(.12, .45, .15));
+    auto yellow_material = make_shared<lambertian>(color(0.8, 0.8, 0.1));
+    auto metal_material = make_shared<metal>(color(0.8, 0.8, 0.8), 0.1);
+    auto glass_material = make_shared<dielectric>(1.5);
+    
     auto light = make_shared<diffuse_light>(color(15, 15, 15));
 
-    // Cornell box sides
-    world.add(make_shared<quad>(point3(555,0,0), vec3(0,0,555), vec3(0,555,0), green));
-    world.add(make_shared<quad>(point3(0,0,555), vec3(0,0,-555), vec3(0,555,0), red));
-    world.add(make_shared<quad>(point3(0,555,0), vec3(555,0,0), vec3(0,0,555), white));
-    world.add(make_shared<quad>(point3(0,0,555), vec3(555,0,0), vec3(0,0,-555), white));
-    world.add(make_shared<quad>(point3(555,0,555), vec3(-555,0,0), vec3(0,555,0), white));
+    // --- OBJETOS DA CENA ---
 
-    // Light
-    world.add(make_shared<quad>(point3(213,554,227), vec3(130,0,0), vec3(0,0,105), light));
+    // 1. Paredes da Cornell Box com chão de Minecraft e fundo amarelo
+    world.add(make_shared<quad>(point3(555,0,0), vec3(0,555,0), vec3(0,0,555), green_material)); // Parede Esquerda
+    world.add(make_shared<quad>(point3(0,0,0), vec3(0,555,0), vec3(0,0,555), red_material));   // Parede Direita
+    world.add(make_shared<quad>(point3(0,0,555), vec3(555,0,0), vec3(0,555,0), yellow_material)); // Parede do Fundo (Amarela)
+    world.add(make_shared<quad>(point3(0,555,0), vec3(555,0,0), vec3(0,0,555), white_material)); // Teto
+    world.add(make_shared<quad>(point3(0,0,0), vec3(555,0,0), vec3(0,0,555), ground_material));  // Chão (Minecraft)
 
-    // Box
-    shared_ptr<hittable> box1 = box(point3(0,0,0), point3(165,330,165), white);
-    box1 = make_shared<rotate_y>(box1, 15);
-    box1 = make_shared<translate>(box1, vec3(265,0,295));
-    world.add(box1);
+    // Luz no teto
+    auto light_quad = make_shared<quad>(point3(213,554,227), vec3(130,0,0), vec3(0,0,105), light);
+    world.add(light_quad);
+    lights->add(light_quad);
 
-    // Glass Sphere
-    auto glass = make_shared<dielectric>(1.5);
-    world.add(make_shared<sphere>(point3(190,90,190), 90, glass));
+    // 2. Cubo de Metal (menor e posicionado atrás)
+    shared_ptr<hittable> metal_box = box(point3(0,0,0), point3(120,120,120), metal_material);
+    metal_box = make_shared<rotate_y>(metal_box, 15);
+    metal_box = make_shared<translate>(metal_box, vec3(100, 0, 300));
+    world.add(metal_box);
 
-    // Light Sources
-    auto empty_material = shared_ptr<material>();
-    hittable_list lights;
-    lights.add(
-        make_shared<quad>(point3(343,554,332), vec3(-130,0,0), vec3(0,0,-105), empty_material));
-    lights.add(make_shared<sphere>(point3(190, 90, 190), 90, empty_material));
+    // 3. Duas esferas de vidro pequenas
+    world.add(make_shared<sphere>(point3(190, 60, 190), 60, glass_material));
+    world.add(make_shared<sphere>(point3(320, 60, 100), 60, glass_material));
 
+    // 4. Cubo médio com textura de Minecraft
+    shared_ptr<hittable> dirt_box = box(point3(0,0,0), point3(150,150,150), dirt_material);
+    dirt_box = make_shared<rotate_y>(dirt_box, -25);
+    dirt_box = make_shared<translate>(dirt_box, vec3(380,0,200));
+    world.add(dirt_box);
+
+    // 5. "Triângulo" vermelho (na verdade, uma cunha/rampa fina e rotacionada)
+    shared_ptr<hittable> wedge = box(point3(0,0,0), point3(200, 20, 80), red_material);
+    wedge = make_shared<rotate_y>(wedge, 20);
+    wedge = make_shared<translate>(wedge, vec3(180, 0, 400)); // Posicionado atrás (Z > 300)
+    world.add(wedge);
+    
+    // Otimização final
+    world = hittable_list(make_shared<bvh_node>(world));
+
+    // Câmera
     camera cam;
-
     cam.aspect_ratio      = 1.0;
     cam.image_width       = 600;
-    cam.samples_per_pixel = 100;
-    cam.max_depth         = 50;
+    cam.samples_per_pixel = 100; // Aumente para 1000+ para a imagem final
+    cam.max_depth         = 10;
     cam.background        = color(0,0,0);
 
-    cam.vfov     = 40;
+    /*
+    // --- CÂMERA 1 (FRENTE) ---
+    cam.vfov     = 40.0;
     cam.lookfrom = point3(278, 278, -800);
     cam.lookat   = point3(278, 278, 0);
-    cam.vup      = vec3(0, 1, 0);
+    cam.vup      = vec3(0,1,0);
+    */
+    
+    // --- CÂMERA 2 (ESQUERDA - VERSÃO CORRIGIDA) ---
+    cam.vfov     = 40.0;
+    cam.lookfrom = point3(550, 278, 278); // Perto da parede verde
+    cam.lookat   = point3(0, 278, 278);   // Olhando diretamente para a parede vermelha
+    cam.vup      = vec3(0,1,0);
+
+    /*
+    // --- CÂMERA 3 (DIREITA) ---
+    cam.vfov     = 40.0;
+    cam.lookfrom = point3(1056, 278, 278); // Posição movida para o eixo X positivo
+    cam.lookat   = point3(278, 278, 278);   // Olhando para o centro da caixa
+    cam.vup      = vec3(0,1,0);
+    */
+
+    /*
+    // --- CÂMERA 4 (ÂNGULO ALTO) ---
+    cam.vfov     = 40.0;
+    cam.lookfrom = point3(278, 600, -800); // Posição bem elevada
+    cam.lookat   = point3(278, 0, 278);    // Olhando para o centro do chão
+    cam.vup      = vec3(0,1,0);
+    */
+
+    /*
+    // --- CÂMERA 5 (TRÁS) ---
+    cam.vfov     = 40.0;
+    cam.lookfrom = point3(278, 278, 550); // Posição na parede do fundo
+    cam.lookat   = point3(278, 278, 0);   // Olhando para a abertura da caixa
+    cam.vup      = vec3(0,1,0);
+    */
 
     cam.defocus_angle = 0;
 
-    cam.render(world, lights);
+    cam.render(world, *lights);
 }
