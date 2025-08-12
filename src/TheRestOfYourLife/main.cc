@@ -85,35 +85,32 @@ int main() {
     cam.vup      = vec3(0,1,0);
     */
     
-    // --- CÂMERA 2 (ESQUERDA - VERSÃO CORRIGIDA) ---
+      /*
     cam.vfov     = 40.0;
-    cam.lookfrom = point3(550, 278, 278); // Perto da parede verde
-    cam.lookat   = point3(0, 278, 278);   // Olhando diretamente para a parede vermelha
-    cam.vup      = vec3(0,1,0);
-
-    /*
-    // --- CÂMERA 3 (DIREITA) ---
-    cam.vfov     = 40.0;
-    cam.lookfrom = point3(1056, 278, 278); // Posição movida para o eixo X positivo
-    cam.lookat   = point3(278, 278, 278);   // Olhando para o centro da caixa
+    cam.lookfrom = point3(450, 300, -400); 
+    cam.lookat   = point3(278, 100, 278);  
     cam.vup      = vec3(0,1,0);
     */
 
-    /*
-    // --- CÂMERA 4 (ÂNGULO ALTO) ---
-    cam.vfov     = 40.0;
-    cam.lookfrom = point3(278, 600, -800); // Posição bem elevada
-    cam.lookat   = point3(278, 0, 278);    // Olhando para o centro do chão
+     /*
+    cam.vfov     = 60.0;
+    cam.lookfrom = point3(450, 50, -200); // Posição baixa (Y=50), na esquerda e à frente
+    cam.lookat   = point3(278, 150, 278); // Olhando para cima, em direção ao centro dos objetos
     cam.vup      = vec3(0,1,0);
     */
 
-    /*
-    // --- CÂMERA 5 (TRÁS) ---
+   /*
     cam.vfov     = 40.0;
-    cam.lookfrom = point3(278, 278, 550); // Posição na parede do fundo
-    cam.lookat   = point3(278, 278, 0);   // Olhando para a abertura da caixa
+    cam.lookfrom = point3(278, 600, -800); // Posição elevada (Y=600) e em frente à caixa
+    cam.lookat   = point3(278, 150, 278);  // Olhando para o centro da cena, um pouco acima do chão
     cam.vup      = vec3(0,1,0);
-    */
+  */
+    
+    cam.vfov     = 40.0;
+    cam.lookfrom = point3(100, 278, 278); // Posição próxima da parede direita (x=0)
+    cam.lookat   = point3(278, 0, 278);   // Mirando no centro do chão para inclinar para baixo
+    cam.vup      = vec3(0,1,0);
+    
 
     cam.defocus_angle = 0;
 
