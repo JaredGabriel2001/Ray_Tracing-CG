@@ -9,20 +9,17 @@
 #include "sphere.h"
 #include "texture.h"
 
-// =================================================================================
-// SUA CENA PERSONALIZADA VAI AQUI
-// =================================================================================
 void minha_cena_personalizada() {
     hittable_list world;
 
-    // --- TEXTURAS ---
+    // texturas
     auto earth_texture = make_shared<image_texture>("external/earthmap.jpg");
     auto ground_texture = make_shared<image_texture>("external/minecraft.jpg");
     auto dirt_texture = make_shared<image_texture>("external/bloco_solo_minecraft.jpg");
     auto tnt_texture = make_shared<image_texture>("external/tnt.png");
     auto cloud_texture = make_shared<noise_texture>(4);
 
-    // --- MATERIAIS ---
+    // materiais
     auto ground_material = make_shared<lambertian>(ground_texture);
     auto earth_material = make_shared<lambertian>(earth_texture);
     auto dirt_material = make_shared<lambertian>(dirt_texture);
@@ -33,7 +30,7 @@ void minha_cena_personalizada() {
     auto metal_material = make_shared<metal>(color(0.8, 0.6, 0.2), 0.1);
     auto light_material = make_shared<diffuse_light>(color(7, 7, 7)); // Luz branca
 
-    // --- OBJETOS ---
+    // objetos-
     world.add(make_shared<quad>(point3(-20,0,-20), vec3(40,0,0), vec3(0,0,40), ground_material));
     world.add(make_shared<sphere>(point3(0, 2, 0), 2, earth_material));
     
@@ -54,7 +51,7 @@ void minha_cena_personalizada() {
 
     world = hittable_list(make_shared<bvh_node>(world));
 
-    // Câmera
+    // camera
     camera cam;
 
     cam.aspect_ratio      = 16.0 / 9.0;
@@ -63,35 +60,35 @@ void minha_cena_personalizada() {
     cam.max_depth         = 50;
     cam.background        = color(0, 0, 0);
 
-    /* --- Câmera  1 centro
+    /* camera1
     cam.vfov     = 50.0;
     cam.lookfrom = point3(0, 4, 9);
     cam.lookat   = point3(0, 1, 0);
     cam.vup      = vec3(0, 1, 0);
     */
     
-    /* --- Câmera 2 (Esquerda) 
+    /* camera2
     cam.vfov     = 50.0;
     cam.lookfrom = point3(-9, 4, 0); // Posição 90 graus à ESQUERDA
     cam.lookat   = point3(0, 1, 0);
     cam.vup      = vec3(0, 1, 0);
     */
 
-    /* --- Câmera 3 (Direita) 
+    /* camera3 
     cam.vfov     = 50.0;
     cam.lookfrom = point3(9, 4, 0); // Posição 90 graus à DIREITA
     cam.lookat   = point3(0, 1, 0);
     cam.vup      = vec3(0, 1, 0);
     */
 
-    /* --- Câmera 4 (Cima) ---
+    /* camera4
     cam.vfov     = 55.0; // Um FOV um pouco mais aberto para a visão de cima
     cam.lookfrom = point3(0, 7, 9);  // MESMA POSIÇÃO XZ do Ângulo 0, mas MUITO MAIS ALTO (Y=7)
     cam.lookat   = point3(0, 0, 0);  // Olhando para o centro do chão
     cam.vup      = vec3(0, 1, 0);    // vup normal funciona perfeitamente aqui
     */
 
-    // --- Câmera 5 (Trás) ---
+    //camera5
     cam.vfov     = 50.0;
     cam.lookfrom = point3(0, 4, -9); // Posição de TRÁS
     cam.lookat   = point3(0, 1, 0);
@@ -104,18 +101,14 @@ void minha_cena_personalizada() {
 }
 
 
-// =================================================================================
-// FUNÇÕES ORIGINAIS DO LIVRO (NÃO MODIFICADAS)
-// =================================================================================
-
-void random_spheres() { /* ... código original ... */ }
-void two_spheres() { /* ... código original ... */ }
-void earth() { /* ... código original ... */ }
-void two_perlin_spheres() { /* ... código original ... */ }
-void quads() { /* ... código original ... */ }
-void simple_light() { /* ... código original ... */ }
-void cornell_box() { /* ... código original ... */ }
-void final_scene() { /* ... código original ... */ }
+void random_spheres() { }
+void two_spheres() { }
+void earth() { }
+void two_perlin_spheres() { }
+void quads() { }
+void simple_light() { }
+void cornell_box() { }
+void final_scene() { }
 
 
 int main() {

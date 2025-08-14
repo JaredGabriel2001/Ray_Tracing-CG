@@ -22,7 +22,7 @@ int main() {
     // cena
     hittable_list world;
 
-    // --- Materiais ---
+    // materiais
     auto material_chao = make_shared<metal>(color(0.4, 0.4, 0.4), 0.2);
     auto material_central_metal = make_shared<metal>(color(0.8, 0.8, 0.8), 0.1);
     auto material_metal_dourado = make_shared<metal>(color(0.8, 0.6, 0.2), 0.3);
@@ -30,21 +30,21 @@ int main() {
     auto material_fosco_azul = make_shared<lambertian>(color(0.1, 0.2, 0.8));
     auto material_reflexivo_topo = make_shared<metal>(color(0.9, 0.9, 0.9), 0.0);
 
-    // --- Objetos ---
-    // 1. Chão Metalizado
+    // objetos
+    // chao Metalizado
     world.add(make_shared<sphere>(point3(0,-1000,0), 1000, material_chao));
 
-    // 2. Objetos principais da cena anterior (sem alteração)
+    // objetos principais da cena anterior 
     world.add(make_shared<sphere>(point3(0.0, 1.0, 0.0), 1.0, material_central_metal));
     world.add(make_shared<sphere>(point3(-2.0, 0.5, 0.0), 0.5, material_metal_dourado));
     world.add(make_shared<sphere>(point3( 2.0, 0.5, 0.0), 0.5, material_metal_cobre));
     world.add(make_shared<sphere>(point3( 0.0, 0.5, -2.0), 0.5, material_fosco_azul));
     world.add(make_shared<sphere>(point3(0.0, 2.8, 0.0), 0.7, material_reflexivo_topo));
 
-    // 3. 10 esferas pequenas aleatórias (agora mais próximas)
+    //  10 esferas pequenas aleatórias 
     for (int i = 0; i < 10; ++i) {
         auto radius = random_double(0.1, 0.3);
-        // O intervalo de -3 a 3 (em vez de -5 a 5) aproxima as esferas do centro
+        
         point3 center(random_double(-3, 3), radius, random_double(-2.5, 2.5));
         shared_ptr<material> sphere_material;
         auto choose_mat = random_double();
@@ -59,7 +59,7 @@ int main() {
         world.add(make_shared<sphere>(center, radius, sphere_material));
     }
 
-    // 4. Adição de 5 esferas médias metalizadas
+    // 5 esferas médias metalizadas
     for (int i = 0; i < 5; ++i) {
         auto radius = random_double(0.4, 0.6); // Tamanho médio
         point3 center(random_double(-4, 4), radius, random_double(-3, 3));
@@ -69,7 +69,7 @@ int main() {
         world.add(make_shared<sphere>(center, radius, sphere_material));
     }
 
-    // 5. Adição de 5 esferas com cores sólidas (foscas)
+    // 5 esferas com cores sólidas (foscas)
     for (int i = 0; i < 5; ++i) {
         auto radius = random_double(0.3, 0.5); // Tamanho médio/pequeno
         point3 center(random_double(-4, 4), radius, random_double(-3, 3));
@@ -79,7 +79,7 @@ int main() {
     }
 
 
-    // Câmera
+    // camera
     camera cam;
 
     cam.aspect_ratio      = 16.0 / 9.0;
@@ -96,32 +96,32 @@ int main() {
     cam.defocus_angle = 0.6;
     cam.focus_dist    = 10.0; */
 
-    /* --- CONFIGURAÇÃO DA CÂMERA 1 ---
+    /* camera1
     cam.vfov     = 30.0;
     cam.lookfrom = point3(0, 3, 8);  // Posição FRONTAL
     cam.lookat   = point3(0, 1, 0);  // Olhando para a base da esfera central
     cam.vup      = vec3(0, 1, 0); */
 
-    /*--- CONFIGURAÇÃO DA CÂMERA 2 ---
+    /*camera2
     cam.vfov     = 55.0;
     cam.lookfrom = point3(-8, 4, 0); // Posição 90 graus à esquerda
     cam.lookat   = point3(0, 1, 0);
     cam.vup      = vec3(0, 1, 0); */ 
 
-    /* --- CONFIGURAÇÃO DA CÂMERA 3 ---
+    /*camera3
     cam.vfov     = 55.0;
     cam.lookfrom = point3(8, 4, 0); // Posição 90 graus à direita
     cam.lookat   = point3(0, 1, 0);
     cam.vup      = vec3(0, 1, 0);
     */
 
-    /* --- CONFIGURAÇÃO DA CÂMERA 4 ---
+    /* camera4
     cam.vfov     = 55.0;
     cam.lookfrom = point3(0, 10, 0); // Posição de CIMA
     cam.lookat   = point3(0, 1, 0);
     cam.vup      = vec3(0, 0, -1); */
 
-    // --- CONFIGURAÇÃO DA CÂMERA 5 ---
+    // camera5
     cam.vfov     = 55.0;
     cam.lookfrom = point3(0, 4, -8); // Posição de TRÁS
     cam.lookat   = point3(0, 1, 0);

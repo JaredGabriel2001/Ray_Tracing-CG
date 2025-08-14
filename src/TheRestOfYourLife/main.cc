@@ -13,11 +13,11 @@ int main() {
     hittable_list world;
     auto lights = make_shared<hittable_list>();
 
-    // --- TEXTURAS ---
+    // texturas
     auto ground_texture = make_shared<image_texture>("external/minecraft.jpg");
     auto dirt_texture = make_shared<image_texture>("external/bloco_solo_minecraft.jpg");
 
-    // --- MATERIAIS ---
+    // materiais
     auto ground_material = make_shared<lambertian>(ground_texture);
     auto dirt_material = make_shared<lambertian>(dirt_texture);
     
@@ -30,7 +30,7 @@ int main() {
     
     auto light = make_shared<diffuse_light>(color(15, 15, 15));
 
-    // --- OBJETOS DA CENA ---
+    // objetos
 
     // 1. Paredes da Cornell Box com chão de Minecraft e fundo amarelo
     world.add(make_shared<quad>(point3(555,0,0), vec3(0,555,0), vec3(0,0,555), green_material)); // Parede Esquerda
@@ -44,7 +44,7 @@ int main() {
     world.add(light_quad);
     lights->add(light_quad);
 
-    // 2. Cubo de Metal (menor e posicionado atrás)
+    // 2. Cubo de Metal (com erro)
     shared_ptr<hittable> metal_box = box(point3(0,0,0), point3(120,120,120), metal_material);
     metal_box = make_shared<rotate_y>(metal_box, 15);
     metal_box = make_shared<translate>(metal_box, vec3(100, 0, 300));
@@ -69,7 +69,7 @@ int main() {
     // Otimização final
     world = hittable_list(make_shared<bvh_node>(world));
 
-    // Câmera
+    // cameara
     camera cam;
     cam.aspect_ratio      = 1.0;
     cam.image_width       = 600;
@@ -77,35 +77,35 @@ int main() {
     cam.max_depth         = 10;
     cam.background        = color(0,0,0);
 
-    /*
-    // --- CÂMERA 1 (FRENTE) ---
+    /* camera1
     cam.vfov     = 40.0;
     cam.lookfrom = point3(278, 278, -800);
     cam.lookat   = point3(278, 278, 0);
     cam.vup      = vec3(0,1,0);
     */
     
-      /*
+      /* camera2
     cam.vfov     = 40.0;
     cam.lookfrom = point3(450, 300, -400); 
     cam.lookat   = point3(278, 100, 278);  
     cam.vup      = vec3(0,1,0);
     */
 
-     /*
+     /*camera3
     cam.vfov     = 60.0;
     cam.lookfrom = point3(450, 50, -200); // Posição baixa (Y=50), na esquerda e à frente
     cam.lookat   = point3(278, 150, 278); // Olhando para cima, em direção ao centro dos objetos
     cam.vup      = vec3(0,1,0);
     */
 
-   /*
+   /* camera4
     cam.vfov     = 40.0;
     cam.lookfrom = point3(278, 600, -800); // Posição elevada (Y=600) e em frente à caixa
     cam.lookat   = point3(278, 150, 278);  // Olhando para o centro da cena, um pouco acima do chão
     cam.vup      = vec3(0,1,0);
   */
     
+  //camera5
     cam.vfov     = 40.0;
     cam.lookfrom = point3(100, 278, 278); // Posição próxima da parede direita (x=0)
     cam.lookat   = point3(278, 0, 278);   // Mirando no centro do chão para inclinar para baixo
